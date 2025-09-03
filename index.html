@@ -39,7 +39,16 @@
         <p id="Bestbatsman"></p>
         <p id="Bestbowler"></p>
 
+        <div class="api-section">
+            <h2>Fetch Player stats from api</h2>
+            <input type="text" id="apiplayername" placeholder="Enter player name">
+            <button onclick="fetchPlayerStats()">Fetch Stats</button>
+            <div id="apiStats" style="margin-top:20px; padding:10px; border:1px solid #ccc;"></div>
+
+        </div>
+
     </div>
+   
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="script.js"></script>
 </body>

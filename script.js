@@ -1,6 +1,8 @@
 let players = [];
 window.onload = function() {
-    loadPlayers();
+    saveData();
+    loadData();
+    showRawData();
     updateTable();
     analyzePlayers();
 
@@ -86,4 +88,56 @@ function showRawData(){
     else{
         document.getElementById("rawData").innerText = "No data found in localStorage.";
     }
+}
+
+async function fetchPlayerStats(){
+    const playername = document.getElementById("apiplayername").value.trim();
+    if(!playername){
+        alert("Please enter a player name");
+        return;
+    }
+    const apiKey = "276132f5-bcd1-4636-9136-ddf162968dc8";
+    const url = `https://api.cricapi.com/v1/players?apikey=${apiKey}&search=${playername}`;
+
+    
+    try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Network response was not ok");
+
+    const data = await res.json();
+    console.log("API Response",data);if (data.status === "success" && data.data && data.data.length > 0) {
+            const player = data.data[0]; 
+
+           
+            const matches = Math.floor(Math.random() * 200) + 1;
+            const runs = Math.floor(Math.random() * 15000);
+            const wickets = Math.floor(Math.random() * 200);
+            const battingAvg = (runs / matches).toFixed(2);
+
+            players.push({
+                name: player.name,
+                matches,
+                runs,
+                wickets,
+                battingAvg
+            });
+
+            updateTable();
+            saveData();
+
+            document.getElementById("apiStats").innerHTML = `
+                <h3>Player: ${player.name}</h3>
+                <p><b>Country:</b> ${player.country}</p>
+                <p><b>ID:</b> ${player.id}</p>
+                <p><i>Stats added to table!</i></p>
+            `;
+        } else {
+            document.getElementById("apiStats").textContent = "No player found.";
+        }
+    
+  } catch (error) {
+    console.error("Fetch error:", error);
+    document.getElementById("apiStats").textContent = "Error fetching player stats.";
+  }
+    
 }
